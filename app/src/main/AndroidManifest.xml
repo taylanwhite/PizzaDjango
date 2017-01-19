@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.example.taylanwhite.pizzadjango">
+
+    <uses-permission android:name="android.permission.INTERNET" />
+
+    <application
+        android:name=".App"
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme">
+        <activity android:name=".view.MainActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity android:name=".PizzaHelper" />
+        <activity android:name=".models.MeatToppingResults" />
+        <activity android:name=".models.MeatToppings" />
+        <activity android:name=".App" />
+        <activity android:name=".view.CustomOrderActivity" />
+        <activity android:name=".view.PastOrdersActivity" />
+        <activity android:name=".view.ToppingsActivity" />
+        <activity android:name=".view.ToppingsVeggies" />
+        <activity android:name=".view.ExtrasActivity" />
+        <activity android:name=".view.CustomerInfoActivity" />
+        <activity android:name=".view.CompleteOrderActivity" />
+        <activity android:name=".view.StatusActivity" />
+        <activity android:name=".presenter.RecyclerTouchListener" />
+        <activity android:name=".presenter.PizzaAdapter" />
+        <activity android:name=".presenter.DividerItemDecoration" />
+        <activity android:name=".presenter.DatabaseHelper" />
+        <activity android:name=".view.PastOrdersMain" />
+        <activity android:name=".view.SelectPizza" />
+        <activity android:name=".view.PastOrders" />
+        <activity android:name=".models.CustomAdapter" />
+        <activity android:name=".models.SpecializedPizzas" />
+        <activity android:name=".models.VeggieToppings" />
+        <activity android:name=".models.SauceType" />
+        <activity android:name=".models.SpecializedPizzaResults" />
+        <activity android:name=".view.CrustOptions" />
+        <activity android:name=".view.SizeOptions" />
+        <activity android:name=".view.ToppingsOptions" />
+        <activity android:name=".presenter.CustomAdapterCrusts" />
+        <activity android:name=".models.CrustType" />
+        <activity android:name=".models.CrustTypeResults" />
+        <activity android:name=".models.Size" />
+        <activity android:name=".models.SizeResults" />
+        <activity android:name=".presenter.CustomAdapterSizes" />
+        <activity android:name=".view.SauceOptions" />
+        <activity android:name=".models.SauceTypeResults" />
+        <activity android:name=".models.VeggieToppingResults" />
+        <activity android:name=".presenter.CustomAdapterSauces" />
+        <activity android:name=".view.MeatOptions" />
+        <activity android:name=".view.VeggieOptions" />
+        <activity android:name=".presenter.CustomAdapterMeats" />
+        <activity android:name=".models.TestModelForMeats" />
+        <activity android:name=".presenter.CustomAdapterVeggies" />
+        <activity android:name=".view.CompletePizza" />
+        <activity android:name=".models.models_not_used.ToppingsObject" />
+        <activity android:name=".presenter.VeggieAdapterRecycler" />
+        <activity android:name=".view.MainMenu" />
+        <activity android:name=".models.UserLogin" />
+        <activity android:name=".view.ExtraOptions" />
+        <activity android:name=".view.PastOrdersComplete"></activity>
+    </application>
+
+</manifest>
