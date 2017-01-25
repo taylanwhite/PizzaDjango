@@ -11,6 +11,9 @@ import retrofit2.Callback
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.*
+import okhttp3.ResponseBody
+
+
 
 
 /**
@@ -67,9 +70,21 @@ object PizzaService {
         @POST("api-token-auth/")
         fun signIn(@Body UserLogin: UserLogin): Call<UserToken>
 
+        //@Headers("Content-Type: application/json")
+        @DELETE("orderedPizzas/{id}/")
+        fun deleteOrder(@Path("id") id: String, @Header("Authorization") token: String): Call<PastOrder>
+
         @Headers("Content-Type: application/json")
         @POST("orderedPizzas/")
         fun postUser(@Header("Authorization") token: String, @Body order: CompleteOrder): Call<CompleteOrder>
+
+        @Headers("Content-Type: application/json")
+        @POST("newUser/")
+        fun createUser(@Body newUser: NewUser): Call<NewUser>
+
+
+
+
 
 //
 //        # @api_view(['GET'])

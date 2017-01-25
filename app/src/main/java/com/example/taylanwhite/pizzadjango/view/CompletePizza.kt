@@ -13,8 +13,6 @@ import com.example.taylanwhite.pizzadjango.models.*
 import kotlinx.android.synthetic.main.activity_complete_pizza.*
 import java.text.DecimalFormat
 import java.util.*
-import android.content.SharedPreferences
-import android.preference.PreferenceManager.getDefaultSharedPreferences
 import android.preference.PreferenceManager
 import com.example.taylanwhite.pizzadjango.presenter.PizzaService
 import com.google.gson.Gson

@@ -53,7 +53,7 @@ class MainActivity : AppCompatActivity() {
         val mTitle = findViewById(R.id.txtTitle) as TextView
         val txtNext = findViewById(R.id.txtNext) as ImageButton
         txtNext.visibility = View.GONE
-        mTitle.text = "LOGIN/SIGN-UP"
+        mTitle.text = "LOGIN/SIGN UP"
 
         val btnLogin = findViewById(R.id.btnLogin) as Button
         val txtUsername = findViewById(R.id.txt_Username_Login) as EditText
@@ -61,101 +61,103 @@ class MainActivity : AppCompatActivity() {
         val btnForgotPassword = findViewById(R.id.btnForgotPassword) as Button
         val btnSignUp = findViewById(R.id.btnSignUp) as Button
         btnForgotPassword.visibility = View.GONE
-        btnSignUp.visibility = View.GONE
 
 
+        btnSignUp.setOnClickListener {
 
-
-
-
-        btnLogin.setOnClickListener{
-
-            var username = txtUsername.text.toString()
-            var password = txtPassword.text.toString()
-
-           if( username.isEmpty() || password.isEmpty())
-           {
-               Toast.makeText(this@MainActivity, "Username or Password cannot be empty", Toast.LENGTH_SHORT).show()
-
-           } else {
-
-
-               PizzaService.api.signIn(UserLogin = UserLogin(username, password)).enqueue(object : Callback<UserToken> {
-                   override fun onFailure(call: Call<UserToken>?, t: Throwable?) {
-                       //To change body of created functions use File | Settings | File Templates.
-                       val connectionError = "Could not connect to service. (Are you connected to the internet?)"
-                       Toast.makeText(this@MainActivity, connectionError, Toast.LENGTH_SHORT).show()
-                   }
-
-                   override fun onResponse(call: Call<UserToken>?, response: Response<UserToken>?) {
-                       if (response?.isSuccessful ?: false) {
-                           response?.body()?.let { response ->
-                               val preferences = PreferenceManager.getDefaultSharedPreferences(this@MainActivity)
-                               val editor = preferences.edit()
-                               editor.putString("token", response.token)
-                               editor.apply()
-
-                               response.token?.let { it1 ->
-                                   PizzaService.api.getCurrentUser("Token " + it1).enqueue(object : Callback<UserResults> {
-                                       override fun onFailure(call: Call<UserResults>?, t: Throwable?) {
-                                           //To change body of created functions use File | Settings | File Templates.
-                                           val connectionError = "Could not connect to service. (Are you connected to the internet?)"
-                                           Toast.makeText(this@MainActivity, connectionError, Toast.LENGTH_SHORT).show()
-                                       }
-
-                                       override fun onResponse(call: Call<UserResults>?, response: Response<UserResults>?) {
-                                           if (response?.isSuccessful ?: false) {
-                                               response?.body()?.let { response ->
-                                                   val preferences = PreferenceManager.getDefaultSharedPreferences(this@MainActivity)
-                                                   val editor = preferences.edit()
-                                                   editor.putString("userID", response.id)
-                                                   editor.apply()
-
-                                                   val intent = Intent(this@MainActivity, MainMenu::class.java)
-                                                   startActivity(intent)
-                                                   finish()
-
-
-
-                                               }
-                                           } else {
-
-                                               Toast.makeText(this@MainActivity, "Error getting User", Toast.LENGTH_SHORT).show()
-
-
-                                           }
-                                       }
-
-                                   })
-                               }
-
-
-
-
-
-
-
-                           }
-                       } else {
-                           val gson = Gson()
-                           val loginError = gson.fromJson(response?.errorBody()?.string(), ErrorBody::class.java)
-
-
-
-                           Toast.makeText(this@MainActivity, loginError.non_field_errors.first(), Toast.LENGTH_SHORT).show()
-
-                           //[size=68 text={"non_field_errors":["Unable to log in with provided credentials…]
-//                        response?.errorBody().content
-
-                       }
-                   }
-
-               })
-           }
+            val intent = Intent(this@MainActivity, SignUp::class.java)
+            startActivity(intent)
+            finish()
 
         }
 
+        val preferences = PreferenceManager.getDefaultSharedPreferences(this)
+        var token: String = preferences.getString("token", "")
+        if(token.equals("empty")) {
+            btnLogin.setOnClickListener {
 
+                var username = txtUsername.text.toString()
+                var password = txtPassword.text.toString()
+
+                if (username.isEmpty() || password.isEmpty()) {
+                    Toast.makeText(this@MainActivity, "Username or Password cannot be empty", Toast.LENGTH_SHORT).show()
+
+                } else {
+
+
+                    PizzaService.api.signIn(UserLogin = UserLogin(username, password)).enqueue(object : Callback<UserToken> {
+                        override fun onFailure(call: Call<UserToken>?, t: Throwable?) {
+                            //To change body of created functions use File | Settings | File Templates.
+                            val connectionError = "Could not connect to service. (Are you connected to the internet?)"
+                            Toast.makeText(this@MainActivity, connectionError, Toast.LENGTH_SHORT).show()
+                        }
+
+                        override fun onResponse(call: Call<UserToken>?, response: Response<UserToken>?) {
+                            if (response?.isSuccessful ?: false) {
+                                response?.body()?.let { response ->
+                                    val preferences = PreferenceManager.getDefaultSharedPreferences(this@MainActivity)
+                                    val editor = preferences.edit()
+                                    editor.putString("token", response.token)
+                                    editor.apply()
+
+                                    response.token?.let { it1 ->
+                                        PizzaService.api.getCurrentUser("Token " + it1).enqueue(object : Callback<UserResults> {
+                                            override fun onFailure(call: Call<UserResults>?, t: Throwable?) {
+                                                //To change body of created functions use File | Settings | File Templates.
+                                                val connectionError = "Could not connect to service. (Are you connected to the internet?)"
+                                                Toast.makeText(this@MainActivity, connectionError, Toast.LENGTH_SHORT).show()
+                                            }
+
+                                            override fun onResponse(call: Call<UserResults>?, response: Response<UserResults>?) {
+                                                if (response?.isSuccessful ?: false) {
+                                                    response?.body()?.let { response ->
+                                                        val preferences = PreferenceManager.getDefaultSharedPreferences(this@MainActivity)
+                                                        val editor = preferences.edit()
+                                                        editor.putString("userID", response.id)
+                                                        editor.apply()
+
+                                                        val intent = Intent(this@MainActivity, MainMenu::class.java)
+                                                        startActivity(intent)
+                                                        finish()
+
+
+                                                    }
+                                                } else {
+
+                                                    Toast.makeText(this@MainActivity, "Error getting User", Toast.LENGTH_SHORT).show()
+
+
+                                                }
+                                            }
+
+                                        })
+                                    }
+
+
+                                }
+                            } else {
+                                val gson = Gson()
+                                val loginError = gson.fromJson(response?.errorBody()?.string(), ErrorBody::class.java)
+
+
+
+                                Toast.makeText(this@MainActivity, loginError.non_field_errors.first(), Toast.LENGTH_SHORT).show()
+
+
+                            }
+                        }
+
+                    })
+                }
+
+            }
+
+        }else{
+            val intent = Intent(this@MainActivity, MainMenu::class.java)
+            Toast.makeText(this@MainActivity, "Automatically Logged In Previous User", Toast.LENGTH_SHORT).show()
+            startActivity(intent)
+            finish()
+        }
 
 
     }

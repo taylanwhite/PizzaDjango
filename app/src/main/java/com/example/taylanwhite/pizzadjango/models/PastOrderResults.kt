@@ -8,7 +8,7 @@ import java.util.*
  * Created by taylanwhite on 1/17/17.
  */
 class PastOrderResults(
-        //        var id: Int? = null,
+        var id: Int? = null,
         var user: UserResults,
         var name: String? = null,
         var price: String,
@@ -35,11 +35,12 @@ class PastOrderResults(
         }
     }
 
-    constructor(source: Parcel) : this(source.readParcelable<UserResults>(UserResults.javaClass.classLoader), source.readString(), source.readString(), source.createTypedArrayList(StatusResults.CREATOR), source.createTypedArrayList(VeggieToppingResults.CREATOR), source.createTypedArrayList(MeatToppingResults.CREATOR), source.createTypedArrayList(SizeResults.CREATOR), source.createTypedArrayList(SauceTypeResults.CREATOR), source.createTypedArrayList(CrustTypeResults.CREATOR) , source.createTypedArrayList(ExtrasResults.CREATOR))
+    constructor(source: Parcel) : this(source.readInt(), source.readParcelable<UserResults>(UserResults.javaClass.classLoader), source.readString(), source.readString(), source.createTypedArrayList(StatusResults.CREATOR), source.createTypedArrayList(VeggieToppingResults.CREATOR), source.createTypedArrayList(MeatToppingResults.CREATOR), source.createTypedArrayList(SizeResults.CREATOR), source.createTypedArrayList(SauceTypeResults.CREATOR), source.createTypedArrayList(CrustTypeResults.CREATOR) , source.createTypedArrayList(ExtrasResults.CREATOR))
 
     override fun describeContents() = 0
 
     override fun writeToParcel(dest: Parcel?, flags: Int) {
+        dest?.writeInt(id!!)
         dest?.writeParcelable(user, 0)
         dest?.writeString(name)
         dest?.writeString(price)

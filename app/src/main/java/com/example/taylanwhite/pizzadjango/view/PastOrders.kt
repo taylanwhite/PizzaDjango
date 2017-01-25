@@ -1,11 +1,14 @@
 package com.example.taylanwhite.pizzadjango.view
 
+import android.content.DialogInterface
 import android.content.Intent
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.os.Handler
 import android.preference.PreferenceManager
+import android.support.v7.app.AlertDialog
 import android.support.v7.widget.DefaultItemAnimator
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
@@ -33,15 +36,11 @@ class PastOrders : AppCompatActivity() {
 
     lateinit var mAdapter: PastOrderRecycler
 
+    lateinit var Handler: Handler
     lateinit var recyclerView: RecyclerView
     val orderList = ArrayList<PastOrderResults>()
-    var orderName: String = ""
-    var orderPrice: String = ""
-    var orderCrust: String = ""
-    var orderSize: String = ""
-    var orderSauce: String = ""
-    var orderToppings = ArrayList<String>()
-    var orderExtras = ArrayList<String>()
+    var noOrders: Boolean = false
+
     var transferOrders = ArrayList<PastOrderResults>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -59,9 +58,18 @@ class PastOrders : AppCompatActivity() {
         mActionBar?.setBackgroundDrawable(ColorDrawable(Color.parseColor("#C0C0C0")))
         val mTitle = mCustomView.findViewById(R.id.txtTitle) as TextView
         mTitle.text = " Past Orders "
+//        if (mAdapter.itemCount == 0) {
+//            mTitle.text = " No Past Orders "
+//        }
+
+        Handler = Handler()
+
+
         val mHome = mCustomView.findViewById(R.id.txtHome) as ImageButton
         val txtNext = findViewById(R.id.txtNext) as ImageButton
         txtNext.visibility = View.GONE
+
+
 
         mHome.setOnClickListener {
             val intent = Intent(this, MainMenu::class.java)
@@ -77,10 +85,50 @@ class PastOrders : AppCompatActivity() {
         recyclerView.addItemDecoration(DividerItemDecoration(this, LinearLayoutManager.VERTICAL))
         recyclerView.adapter = mAdapter
 
+
+
         recyclerView.addOnItemTouchListener(
                 RecyclerTouchListener(this@PastOrders, recyclerView, object:RecyclerTouchListener.ClickListener {
+                    val preferences = PreferenceManager.getDefaultSharedPreferences(this@PastOrders)
+                    var token: String = preferences.getString("token", "")
                     override fun onLongClick(view: View, position: Int) {
 
+                        val items = arrayOf<CharSequence>("Delete this Order?")
+                        val builder = AlertDialog.Builder(this@PastOrders)
+                        builder.setTitle("")
+                        builder.setItems(items) { dialog, item ->
+
+                                PizzaService.api.deleteOrder(orderList[position].id.toString(), "Token " + token).enqueue(object : Callback<PastOrder> {
+                                    override fun onFailure(call: Call<PastOrder>?, t: Throwable?) {
+                                        val connectionError = "Could not delete Past Order"
+                                        Toast.makeText(this@PastOrders, connectionError, Toast.LENGTH_SHORT).show()
+                                        Log.d("onFailure", connectionError, t)
+                                    }
+
+                                    override fun onResponse(call: Call<PastOrder>?, response: Response<PastOrder>?) {
+                                        if (response?.isSuccessful ?: false) {
+
+                                            response?.body()?.let { response ->
+
+                                                //
+
+                                            }
+                                        }
+//                                        val intent = Intent(this@PastOrders, PastOrders::class.java)
+//                                        startActivity(intent)
+//                                        finish()
+                                        orderList.removeAt(position)
+                                        mAdapter.notifyItemRemoved(position)
+                                    }
+
+                                })
+
+                        }
+                        builder.show()
+//
+
+
+//
 
                     }
 
@@ -105,6 +153,8 @@ class PastOrders : AppCompatActivity() {
 
         getOrders()
 
+
+
     }
 
     private fun getOrders(page: Int? = null) {
@@ -121,33 +171,17 @@ class PastOrders : AppCompatActivity() {
                 override fun onResponse(call: Call<PastOrder>?, response: Response<PastOrder>?) {
                     if (response?.isSuccessful ?: false) {
                         response?.body()?.let { response ->
-//                            orderName = response.results[0].name as String
-//                            orderPrice = response.results[0].price
-//                            orderCrust = response.results[0].crustType[0].name as String
-//                            orderSauce = response.results[0].sauceToppings[0].name as String
-//                            orderSize = response.results[0].size[0].size as String
-//
-//                            for (item in response.results[0].meatToppings)
-//                            {
-//                            orderToppings.add(item.toString())
-//                            }
-//                            for (item in response.results[0].veggieToppings)
-//                            {
-//                            orderToppings.add(item.toString())
-//                            }
-//                            for (item in response.results[0].extra)
-//                            {
-//                            orderExtras.add(item.toString())
-//                            }
 
                             for (item in response.results) {
                                 transferOrders.add(item)
+
                             }
 
                             for (item in response.results) {
                                 orderList.add(item)
                                 //reverse arraylist to show todays deal first
                                 //Collections.reverse(pizzaList)
+//
 
                                 mAdapter.notifyDataSetChanged()
                             }

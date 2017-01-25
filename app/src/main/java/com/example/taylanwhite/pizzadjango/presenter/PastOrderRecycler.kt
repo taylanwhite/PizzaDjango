@@ -18,6 +18,8 @@ import java.util.*
 
 class PastOrderRecycler(private val orderList: List<PastOrderResults>) : RecyclerView.Adapter<PastOrderRecycler.MyViewHolder>() {
 
+
+
     inner class MyViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         var pizzaName: TextView
         var pizzaSize: TextView
@@ -34,9 +36,11 @@ class PastOrderRecycler(private val orderList: List<PastOrderResults>) : Recycle
             pizzaName.setTextColor(Color.BLACK)
             pizzaSize.setTextColor(Color.GRAY)
             pizzaPrice.setTextColor(Color.GRAY)
+
             pizzaName.text = orderDetails.name + "                                                 "
             pizzaSize.text = orderDetails.size[0].size
             pizzaPrice.text = "$ " + orderDetails.price
+
 //            pizzaName.text = "test"
 //            pizzaSize.text = "test"
 //            pizzaPrice.text = "test"
@@ -66,4 +70,6 @@ class PastOrderRecycler(private val orderList: List<PastOrderResults>) : Recycle
 
         return position
     }
+
+
 }
