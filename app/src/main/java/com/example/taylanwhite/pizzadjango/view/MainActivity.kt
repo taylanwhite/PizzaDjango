@@ -23,12 +23,11 @@ import com.google.gson.Gson
 import android.content.SharedPreferences
 import android.preference.PreferenceManager.getDefaultSharedPreferences
 import android.preference.PreferenceManager
-
-
-
-
-
-
+import com.example.taylanwhite.pizzadjango.view.testing.TestNavigationDrawer
+import com.example.taylanwhite.pizzadjango.view.testing.TestScrollingActivity
+import com.example.taylanwhite.pizzadjango.view.testing.TestTabbedActivity
+import com.example.taylanwhite.pizzadjango.view.testing.TestingFullscreenActivity
+import kotlinx.android.synthetic.*
 
 
 class MainActivity : AppCompatActivity() {
@@ -38,8 +37,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         val currentLayout = findViewById(R.id.activity_login) as RelativeLayout
-        currentLayout.setBackgroundColor(Color.parseColor("#D2B48C"))
-
+        currentLayout.setBackgroundResource(R.mipmap.dark_background)
         val mActionBar = supportActionBar
         mActionBar?.setDisplayShowHomeEnabled(false)
         mActionBar?.setDisplayShowTitleEnabled(false)
@@ -47,19 +45,28 @@ class MainActivity : AppCompatActivity() {
         val mCustomView = mInflater.inflate(R.layout.activity_custom_title_bar, null)
         mActionBar?.customView = mCustomView
         mActionBar?.setDisplayShowCustomEnabled(true)
-        mActionBar?.setBackgroundDrawable(ColorDrawable(Color.parseColor("#C0C0C0")))
-        val mHome = findViewById(R.id.txtHome) as ImageButton
+        mActionBar?.setBackgroundDrawable(ColorDrawable(Color.parseColor("#212121")))
+        val mHome = findViewById(R.id.txtHome) as ImageView
         mHome.visibility = View.GONE
         val mTitle = findViewById(R.id.txtTitle) as TextView
-        val txtNext = findViewById(R.id.txtNext) as ImageButton
+        val txtNext = findViewById(R.id.txtNext) as ImageView
+        val txtLogo = findViewById(R.id.txtLogo) as TextView
+        mTitle.setTextColor(Color.parseColor("#BDBDBD"))
         txtNext.visibility = View.GONE
         mTitle.text = "LOGIN/SIGN UP"
+        txtLogo.setTextColor(Color.parseColor("#BDBDBD"))
+
+
 
         val btnLogin = findViewById(R.id.btnLogin) as Button
         val txtUsername = findViewById(R.id.txt_Username_Login) as EditText
         val txtPassword = findViewById(R.id.txt_Pass_Login) as EditText
         val btnForgotPassword = findViewById(R.id.btnForgotPassword) as Button
         val btnSignUp = findViewById(R.id.btnSignUp) as Button
+        btnLogin.setTextColor(Color.BLACK)
+//        txtUsername.setTextColor(Color.BLACK)
+//        txtPassword.setTextColor(Color.BLACK)
+        btnSignUp.setTextColor(Color.parseColor("#BDBDBD"))
         btnForgotPassword.visibility = View.GONE
 
 

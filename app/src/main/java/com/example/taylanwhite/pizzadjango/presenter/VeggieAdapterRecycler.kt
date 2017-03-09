@@ -7,13 +7,15 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import android.widget.Toast
 import com.example.taylanwhite.pizzadjango.R
+import com.example.taylanwhite.pizzadjango.models.DietListResults
 import com.example.taylanwhite.pizzadjango.models.SpecializedPizzaResults
 import com.example.taylanwhite.pizzadjango.models.VeggieToppingResults
 import java.util.*
 
 
-class VeggieAdapterRecycler(val idVeggieList: ArrayList<VeggieToppingResults>, val pizza_ID: ArrayList<SpecializedPizzaResults>, private val veggieList: List<VeggieToppingResults>) : RecyclerView.Adapter<VeggieAdapterRecycler.MyViewHolder>() {
+class VeggieAdapterRecycler(val idVeggieList: ArrayList<VeggieToppingResults>, val pizza_ID: ArrayList<SpecializedPizzaResults>, private val veggieList: List<VeggieToppingResults>, val crustDietaryRestrictions: ArrayList<DietListResults>) : RecyclerView.Adapter<VeggieAdapterRecycler.MyViewHolder>() {
 
 
     inner class MyViewHolder(val view: View) : RecyclerView.ViewHolder(view) {
@@ -26,7 +28,7 @@ class VeggieAdapterRecycler(val idVeggieList: ArrayList<VeggieToppingResults>, v
         }
 
         fun bind(topping: VeggieToppingResults) {
-
+            VeggieName.setTextColor(Color.WHITE)
             try {
                 for (item in pizza_ID[0].veggieToppings) {
 
@@ -43,6 +45,29 @@ class VeggieAdapterRecycler(val idVeggieList: ArrayList<VeggieToppingResults>, v
             } catch (e: IndexOutOfBoundsException) {
             }
 
+            var v = 0
+            var t = 0
+            try {
+                for (z in 0..crustDietaryRestrictions.size - 1)
+                {
+
+                    crustDietaryRestrictions[t].veggieToppings.forEach {
+                        item ->
+                        if (topping.id == item) {
+
+                            VeggieName.setTextColor(Color.RED)
+
+                        }
+                        v++
+                    }
+                    t++
+                }
+            }
+            catch (e:Exception) {
+                println("Error " + e.message)
+            }
+
+
             view.setOnClickListener {
 
                 if (!(topping.selected))
@@ -57,7 +82,7 @@ class VeggieAdapterRecycler(val idVeggieList: ArrayList<VeggieToppingResults>, v
                 {
                     topping.selected = false
                     VeggieName.text =topping.name
-                    VeggieName.setTextColor(Color.BLACK)
+                    VeggieName.setTextColor(Color.WHITE)
                     idVeggieList.remove(topping)
 
                 }

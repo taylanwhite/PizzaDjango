@@ -3,6 +3,7 @@ package com.example.taylanwhite.pizzadjango.presenter
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
+import android.graphics.Color
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -24,6 +25,7 @@ class PizzaListAdapter(val context: Activity, val pizzaListDisplay: MutableList<
         val layoutInflater = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
         val viewRow = layoutInflater.inflate(R.layout.activity_custom_pizza_list, null, true)
         val mtextView = viewRow.findViewById(R.id.text_view) as TextView
+        mtextView.setTextColor(Color.WHITE)
         val mimageView = viewRow.findViewById(R.id.image_view) as ImageView
 //        onstructor(source: Parcel) : this(
 //        id = source.readInt(),

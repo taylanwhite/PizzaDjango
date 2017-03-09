@@ -13,6 +13,7 @@ import android.widget.ArrayAdapter
 import android.widget.TextView
 import com.example.taylanwhite.pizzadjango.R
 import com.example.taylanwhite.pizzadjango.models.CrustTypeResults
+import com.example.taylanwhite.pizzadjango.models.DietListResults
 import com.example.taylanwhite.pizzadjango.models.SizeResults
 import com.example.taylanwhite.pizzadjango.models.SpecializedPizzaResults
 import com.example.taylanwhite.pizzadjango.view.SauceOptions
@@ -20,7 +21,7 @@ import com.example.taylanwhite.pizzadjango.view.SizeOptions
 import java.util.*
 
 
-class SizeListAdapter(val context: Activity, val pizza_ID: ArrayList<SpecializedPizzaResults>, val crust_ID: ArrayList<CrustTypeResults>, val sizeListDisplay: ArrayList<SizeResults>) : ArrayAdapter<SizeResults>(context, R.layout.activity_custom_pizza_list, sizeListDisplay) {
+class SizeListAdapter(val context: Activity, val pizza_ID: ArrayList<SpecializedPizzaResults>, val crust_ID: ArrayList<CrustTypeResults>, val sizeListDisplay: ArrayList<SizeResults>, val crustDietaryRestrictions: ArrayList<DietListResults>) : ArrayAdapter<SizeResults>(context, R.layout.activity_custom_pizza_list, sizeListDisplay) {
 
 
 
@@ -32,10 +33,10 @@ class SizeListAdapter(val context: Activity, val pizza_ID: ArrayList<Specialized
         val layoutInflater = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
         val viewRow = layoutInflater.inflate(R.layout.activity_custom_crust_list, null, true)
         val mtextView = viewRow.findViewById(R.id.text_view) as TextView
+        mtextView.setTextColor(Color.WHITE)
         sizeList.size = sizeListDisplay[i].size
         sizeList.id = sizeListDisplay[i].id
         sizeList.price = sizeListDisplay[i].price
-       // pizza_ID[0].name
        mtextView.text = sizeListDisplay[i].size
 
 
@@ -43,12 +44,12 @@ class SizeListAdapter(val context: Activity, val pizza_ID: ArrayList<Specialized
         viewRow.setOnClickListener {
             val sizeSelectedList = ArrayList<SizeResults>()
             sizeSelectedList.add(sizeList)
-//            val sizeSelected = sizeListDisplay[i].id!!
-//            Log.d("SELECTED_SIZE_ID::", "$sizeSelected")
+            
             val intent = Intent(context, SauceOptions::class.java)
             intent.putExtra("pizzaID", pizza_ID)
             intent.putExtra("crustID", crust_ID)
             intent.putExtra("sizeID", sizeSelectedList)
+            intent.putExtra("dietID", crustDietaryRestrictions)
             context.startActivity(intent)
 
 

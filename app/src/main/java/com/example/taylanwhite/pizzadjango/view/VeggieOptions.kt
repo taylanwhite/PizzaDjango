@@ -10,10 +10,7 @@ import android.support.v7.widget.DefaultItemAnimator
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
-import android.widget.ImageButton
-import android.widget.LinearLayout
-import android.widget.RelativeLayout
-import android.widget.TextView
+import android.widget.*
 import com.example.taylanwhite.pizzadjango.R
 import com.example.taylanwhite.pizzadjango.models.*
 import com.example.taylanwhite.pizzadjango.presenter.PizzaService
@@ -37,7 +34,7 @@ class VeggieOptions : AppCompatActivity() {
         setContentView(R.layout.activity_meat_options)
         val idVeggieList = ArrayList<VeggieToppingResults>()
         val currentLayout = findViewById(R.id.activity_meat_options) as RelativeLayout
-        currentLayout.setBackgroundColor(Color.parseColor("#D2B48C"))
+        currentLayout.setBackgroundResource(R.mipmap.dark_background)
         val mActionBar = supportActionBar
         mActionBar?.setDisplayShowHomeEnabled(false)
         mActionBar?.setDisplayShowTitleEnabled(false)
@@ -45,11 +42,12 @@ class VeggieOptions : AppCompatActivity() {
         val mCustomView = mInflater.inflate(R.layout.activity_custom_title_bar, null)
         mActionBar?.customView = mCustomView
         mActionBar?.setDisplayShowCustomEnabled(true)
-        mActionBar?.setBackgroundDrawable(ColorDrawable(Color.parseColor("#C0C0C0")))
+        mActionBar?.setBackgroundDrawable(ColorDrawable(Color.parseColor("#212121")))
         val mTitle = mCustomView.findViewById(R.id.txtTitle) as TextView
         mTitle.text = " Choose the Veggies "
-        val mHome = mCustomView.findViewById(R.id.txtHome) as ImageButton
-        val btnNext = findViewById(R.id.txtNext) as ImageButton
+        val mHome = mCustomView.findViewById(R.id.txtHome) as ImageView
+        val btnNext = findViewById(R.id.txtNext) as ImageView
+        mTitle.setTextColor(Color.parseColor("#BDBDBD"))
 
         val extras = intent.extras
         var pizzaSelected = extras.getParcelableArrayList<SpecializedPizzaResults>("pizzaID")
@@ -57,6 +55,7 @@ class VeggieOptions : AppCompatActivity() {
         var sizeSelected = extras.getParcelableArrayList<SizeResults>("sizeID")
         var sauceSelected = extras.getParcelableArrayList<SauceTypeResults>("sauceID")
         var meatList = extras.getParcelableArrayList<MeatToppingResults>("meatList")
+        var dietRestrictions = extras.getParcelableArrayList<DietListResults>("dietID")
         btnNext.setOnClickListener {
             val intent = Intent(this, ExtraOptions::class.java)
             intent.putExtra("pizzaID", pizzaSelected)
@@ -65,7 +64,9 @@ class VeggieOptions : AppCompatActivity() {
             intent.putExtra("sauceID", sauceSelected)
             intent.putExtra("meatList", meatList)
             intent.putExtra("veggieList", idVeggieList)
+            intent.putExtra("dietID", dietRestrictions)
             startActivity(intent)
+            finish()
         }
         mHome.setOnClickListener {
             val intent = Intent(this, MainMenu::class.java)
@@ -73,7 +74,7 @@ class VeggieOptions : AppCompatActivity() {
             finish()
         }
 
-        mAdapter = VeggieAdapterRecycler(idVeggieList, pizzaSelected, pizzaList)
+        mAdapter = VeggieAdapterRecycler(idVeggieList, pizzaSelected, pizzaList, dietRestrictions)
         recyclerView = findViewById(R.id.recycler_view) as RecyclerView
         val mLayoutManager = LinearLayoutManager(applicationContext)
         recyclerView.layoutManager = mLayoutManager
@@ -89,7 +90,8 @@ class VeggieOptions : AppCompatActivity() {
         var subStr = ""
         PizzaService.api.getVeggieToppings(page).enqueue(object: Callback<VeggieToppings> {
             override fun onFailure(call: Call<VeggieToppings>?, t: Throwable?) {
-                throw UnsupportedOperationException("not implemented") //To change body of created functions use File | Settings | File Templates.
+                val connectionError = "Could not connect to service. (Are you connected to the internet?)"
+                Toast.makeText(this@VeggieOptions, connectionError, Toast.LENGTH_SHORT).show()
             }
 
             override fun onResponse(call: Call<VeggieToppings>?, response: Response<VeggieToppings>?) {

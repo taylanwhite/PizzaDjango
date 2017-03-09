@@ -3,6 +3,8 @@ package izeni.pizza.presenter
 import android.R
 import android.content.Context
 import android.graphics.Canvas
+import android.graphics.Color
+import android.graphics.PorterDuff
 import android.graphics.Rect
 import android.graphics.drawable.Drawable
 import android.support.v7.widget.LinearLayoutManager
@@ -38,30 +40,31 @@ class DividerItemDecoration(context: Context, orientation: Int) : RecyclerView.I
     }
 
     fun drawVertical(c: Canvas, parent: RecyclerView) {
-        val left = parent.getPaddingLeft()
-        val right = parent.getWidth() - parent.getPaddingRight()
+        val left = parent.paddingLeft
+        val right = parent.width - parent.paddingRight
 
-        val childCount = parent.getChildCount()
+        val childCount = parent.childCount
         for (i in 0..childCount - 1) {
             val child = parent.getChildAt(i)
-            val params = child.getLayoutParams() as RecyclerView.LayoutParams
-            val top = child.getBottom() + params.bottomMargin
-            val bottom = top + mDivider.getIntrinsicHeight()
+            val params = child.layoutParams as RecyclerView.LayoutParams
+            val top = child.bottom + params.bottomMargin
+            val bottom = top + mDivider.intrinsicHeight + 10
             mDivider.setBounds(left, top, right, bottom)
+            mDivider.setColorFilter(Color.BLACK, PorterDuff.Mode.SRC_IN)
             mDivider.draw(c)
         }
     }
 
     fun drawHorizontal(c: Canvas, parent: RecyclerView) {
-        val top = parent.getPaddingTop()
-        val bottom = parent.getHeight() - parent.getPaddingBottom()
+        val top = parent.paddingTop
+        val bottom = parent.height - parent.paddingBottom
 
-        val childCount = parent.getChildCount()
+        val childCount = parent.childCount
         for (i in 0..childCount - 1) {
             val child = parent.getChildAt(i)
-            val params = child.getLayoutParams() as RecyclerView.LayoutParams
-            val left = child.getRight() + params.rightMargin
-            val right = left + mDivider.getIntrinsicHeight()
+            val params = child.layoutParams as RecyclerView.LayoutParams
+            val left = child.right + params.rightMargin
+            val right = left + mDivider.intrinsicHeight
             mDivider.setBounds(left, top, right, bottom)
             mDivider.draw(c)
         }
@@ -69,9 +72,9 @@ class DividerItemDecoration(context: Context, orientation: Int) : RecyclerView.I
 
     override fun getItemOffsets(outRect: Rect, view: View, parent: RecyclerView, state: RecyclerView.State) {
         if (mOrientation == VERTICAL_LIST) {
-            outRect.set(0, 0, 0, mDivider.getIntrinsicHeight())
+            outRect.set(0, 0, 0, mDivider.intrinsicHeight)
         } else {
-            outRect.set(0, 0, mDivider.getIntrinsicWidth(), 0)
+            outRect.set(0, 0, mDivider.intrinsicWidth, 0)
         }
     }
 

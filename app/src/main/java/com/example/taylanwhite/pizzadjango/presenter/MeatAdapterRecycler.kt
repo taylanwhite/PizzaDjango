@@ -7,17 +7,19 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import com.example.taylanwhite.pizzadjango.R
+import com.example.taylanwhite.pizzadjango.models.DietListResults
 import com.example.taylanwhite.pizzadjango.models.MeatToppingResults
 import com.example.taylanwhite.pizzadjango.models.SpecializedPizzaResults
 import java.util.*
 
 
-class MeatAdapterRecycler(val idMeatList: ArrayList<MeatToppingResults>, val pizza_ID: ArrayList<SpecializedPizzaResults>, private val meatList: List<MeatToppingResults>) : RecyclerView.Adapter<MeatAdapterRecycler.MyViewHolder>() {
+class MeatAdapterRecycler(val idMeatList: ArrayList<MeatToppingResults>, val pizza_ID: ArrayList<SpecializedPizzaResults>, private val meatList: List<MeatToppingResults>, val crustDietaryRestrictions: ArrayList<DietListResults>) : RecyclerView.Adapter<MeatAdapterRecycler.MyViewHolder>() {
 
 
     inner class MyViewHolder(val view: View) : RecyclerView.ViewHolder(view) {
         var meatName: TextView
         var i = 0
+        var ii = 0
 
 
         init {
@@ -25,7 +27,7 @@ class MeatAdapterRecycler(val idMeatList: ArrayList<MeatToppingResults>, val piz
         }
 
         fun bind(topping: MeatToppingResults) {
-
+            meatName.setTextColor(Color.WHITE)
             try {
                 for (item in pizza_ID[0].meatToppings) {
 
@@ -35,17 +37,37 @@ class MeatAdapterRecycler(val idMeatList: ArrayList<MeatToppingResults>, val piz
                         topping.selected = true
                         idMeatList.add(topping)
                     }
+
                     i++
                 }
-
-
             } catch (e: IndexOutOfBoundsException) {
+            }
+
+            var v = 0
+            var t = 0
+            try {
+                for (z in 0..crustDietaryRestrictions.size - 1)
+                {
+
+                    crustDietaryRestrictions[t].meatToppings.forEach {
+                        item ->
+                        if (topping.id == item) {
+
+                            meatName.setTextColor(Color.RED)
+
+
+                        }
+                        v++
+                    }
+                    t++
+                }
+            }
+            catch (e:Exception) {
+                println("Error " + e.message)
             }
 
 
             view.setOnClickListener {
-
-
 
                 if (!(topping.selected))
                 {
@@ -59,7 +81,7 @@ class MeatAdapterRecycler(val idMeatList: ArrayList<MeatToppingResults>, val piz
                 {
                    topping.selected = false
                     meatName.text = topping.name
-                    meatName.setTextColor(Color.BLACK)
+                    meatName.setTextColor(Color.WHITE)
                     idMeatList.remove(topping)
 
                 }

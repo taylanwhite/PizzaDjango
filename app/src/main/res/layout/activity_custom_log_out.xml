@@ -5,40 +5,50 @@
     >
 
 
-    <ImageButton
-        android:id="@+id/btn_profile"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
+    <ImageView
+        android:id="@+id/txt_profile"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
         android:layout_alignParentLeft="true"
-        android:layout_centerVertical="true"
+        android:layout_alignParentStart="true"
         android:layout_marginLeft="8dp"
-        android:background="@mipmap/account_profile"
+        android:layout_marginStart="8dp"
+        android:src="@mipmap/account_profile"
+        android:layout_centerVertical="true"
+        android:tint="@color/silver"
         />
 
 
     <TextView
-        android:id="@+id/txtTitle"
+        android:id="@+id/txt_title"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:textColor="#222222"
         android:gravity="center"
         android:textAllCaps="true"
         android:textAppearance="?android:attr/textAppearanceLarge"
-        android:textColor="#222222"
         android:layout_marginTop="10dp"
+        android:layout_centerVertical="true"
+        android:tint="@color/grayMain"
+
         />
 
-    <TextView
-        android:id="@+id/txtNext"
-        android:layout_marginTop="15dp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAllCaps="true"
-        android:textColor="#222222"
-        android:text="Log Out"
+    <ImageView
+        android:id="@+id/txt_log_out"
         android:textAppearance="?android:attr/textAppearanceLarge"
-        android:layout_alignParentTop="true"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:textColor="#222222"
+        android:gravity="center"
+        android:layout_centerVertical="true"
+        android:textAllCaps="true"
+        android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true" />
+        android:layout_marginRight="10dp"
+        android:src="@mipmap/white_logout"
+        android:tint="@color/silver"
+
+        />
 
 
 </RelativeLayout>

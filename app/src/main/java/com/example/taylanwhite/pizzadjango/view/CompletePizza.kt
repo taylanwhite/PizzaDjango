@@ -29,8 +29,8 @@ class CompletePizza : AppCompatActivity() {
         val idVeggieList = ArrayList<Int>()
         val currentLayout = findViewById(R.id.activity_complete_pizza) as RelativeLayout
         val scrollLayout = findViewById(R.id.activity_scroll_view) as ScrollView
-        scrollLayout.setBackgroundColor(Color.parseColor("#D2B48C"))
-        currentLayout.setBackgroundColor(Color.parseColor("#D2B48C"))
+        scrollLayout.setBackgroundResource(R.mipmap.dark_background)
+        currentLayout.setBackgroundResource(R.mipmap.dark_background)
         val mActionBar = supportActionBar
         mActionBar?.setDisplayShowHomeEnabled(false)
         mActionBar?.setDisplayShowTitleEnabled(false)
@@ -38,13 +38,14 @@ class CompletePizza : AppCompatActivity() {
         val mCustomView = mInflater.inflate(R.layout.activity_custom_title_bar, null)
         mActionBar?.customView = mCustomView
         mActionBar?.setDisplayShowCustomEnabled(true)
-        mActionBar?.setBackgroundDrawable(ColorDrawable(Color.parseColor("#C0C0C0")))
+        mActionBar?.setBackgroundDrawable(ColorDrawable(Color.parseColor("#212121")))
         val mTitle = mCustomView.findViewById(R.id.txtTitle) as TextView
         mTitle.text = " Add to Order "
+        mTitle.setTextColor(Color.parseColor("#BDBDBD"))
         val image_Toppings = findViewById(R.id.image_customers) as ImageView
         App.picasso.load(R.mipmap.pizza3).into(image_Toppings)
-        val mHome = mCustomView.findViewById(R.id.txtHome) as ImageButton
-        val btnNext = findViewById(R.id.txtNext) as ImageButton
+        val mHome = mCustomView.findViewById(R.id.txtHome) as ImageView
+        val btnNext = findViewById(R.id.txtNext) as ImageView
         val txtDetails = findViewById(R.id.txt_order_details) as TextView
         val chosenPizza = findViewById(R.id.txt_chosen_pizza) as TextView
         val extrasChosen = findViewById(R.id.txt_extras) as TextView
@@ -141,12 +142,14 @@ class CompletePizza : AppCompatActivity() {
 
         val decim = DecimalFormat("0.00")
         val priceFormatted = decim.format(priceList)
-        if (meatList != null && veggieSelected != null) {
+        txt_toppings.setTextColor(Color.parseColor("#BDBDBD"))
+        txt_extras.setTextColor(Color.parseColor("#BDBDBD"))
+        if (!(toppingBuilder.isEmpty())) {
             txt_toppings.text = "Toppings: " + toppingBuilder.toString()
         } else {
             txt_toppings.text = "Toppings: None"
         }
-        if (extraList != null) {
+        if (!(extraBuilder.isEmpty())) {
             txt_extras.text = "Extras: " + extraBuilder.toString()
         } else {
             txt_extras.text = "Extras: None"
@@ -162,7 +165,7 @@ class CompletePizza : AppCompatActivity() {
             val userID: String = preferences.getString("userID", "")
 
 
-            PizzaService.api.postUser(token, CompleteOrder(user = userID, price = priceFormatted, name = pizzaSelected[0].name as String, veggieToppings = veggieSelected.map { it.id!! }, size = sizeSelected.map { it.id!! }, meatToppings = meatList.map { it.id!! }, sauceToppings = sauceSelected.map { it.id!! }, crustType = crustSelected.map { it.id!! }, extra = extraList.map { it?.id ?: 0 }
+            PizzaService.api.postUserPizza(token, CompleteOrder(user = userID, price = priceFormatted, name = pizzaSelected[0].name as String, veggieToppings = veggieSelected.map { it.id!! }, size = sizeSelected.map { it.id!! }, meatToppings = meatList.map { it.id!! }, sauceToppings = sauceSelected.map { it.id!! }, crustType = crustSelected.map { it.id!! }, extra = extraList.map { it?.id ?: 0 }
             ) ).enqueue(object : Callback<CompleteOrder> {
                 override fun onFailure(call: Call<CompleteOrder>?, t: Throwable?) {
                     //To change body of created functions use File | Settings | File Templates.

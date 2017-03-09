@@ -1,18 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="50dp"
     >
 
 
-    <ImageButton
+    <ImageView
         android:id="@+id/txtHome"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
         android:layout_alignParentLeft="true"
-        android:layout_centerVertical="true"
+        android:layout_alignParentStart="true"
         android:layout_marginLeft="8dp"
-        android:background="@mipmap/home_button"
+        android:layout_marginStart="8dp"
+        android:layout_centerVertical="true"
+        android:src="@mipmap/home_button"
+        android:tint="@color/silver"
         />
 
 
@@ -20,14 +24,16 @@
         android:id="@+id/txtTitle"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:textColor="#222222"
         android:gravity="center"
         android:textAllCaps="true"
         android:textAppearance="?android:attr/textAppearanceLarge"
-        android:textColor="#222222"
         android:layout_marginTop="10dp"
+        android:layout_centerVertical="true"
+        android:tint="@color/grayMain"
         />
 
-    <ImageButton
+    <ImageView
         android:id="@+id/txtNext"
         android:layout_width="50dp"
         android:layout_height="50dp"
@@ -36,8 +42,10 @@
         android:layout_marginRight="8dp"
         android:textAllCaps="true"
         android:textColor="#222222"
-        android:background="@mipmap/arrow_icon"
+        android:src="@mipmap/arrow_icon"
+        android:tint="@color/silver"
         />
+
 
 
 

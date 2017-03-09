@@ -1,8 +1,10 @@
 package com.example.taylanwhite.pizzadjango.presenter
 
+import android.content.Context
 import android.net.Uri
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.preference.PreferenceManager
 import com.example.taylanwhite.pizzadjango.models.*
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -39,6 +41,7 @@ object PizzaService {
     //http://10.0.2.2:8000/users/?format=json
     interface ServiceInterface
     {
+
         @GET("meatToppings/")
         fun getMeatToppings(@Query("page")page: Int? = null): Call<MeatToppings>
 
@@ -74,19 +77,42 @@ object PizzaService {
         @DELETE("orderedPizzas/{id}/")
         fun deleteOrder(@Path("id") id: String, @Header("Authorization") token: String): Call<PastOrder>
 
+        @DELETE("userDietaryRestriction/{id}/")
+        fun deletePastDiets(@Path("id") id: String, @Header("Authorization") token: String): Call <UserDietsDeleteResults>
+
+        @GET("userDietaryRestriction/")
+        fun getChosenDietsId(@Header("Authorization") token: String): Call<UserDietsDeleteResults>
+
+        @GET("userDietaryRestriction/")
+        fun getChosenDiets(@Header("Authorization") token: String): Call<GetUserDietsResults>
+
         @Headers("Content-Type: application/json")
         @POST("orderedPizzas/")
-        fun postUser(@Header("Authorization") token: String, @Body order: CompleteOrder): Call<CompleteOrder>
+        fun postUserPizza(@Header("Authorization") token: String, @Body order: CompleteOrder): Call<CompleteOrder>
 
         @Headers("Content-Type: application/json")
         @POST("newUser/")
         fun createUser(@Body newUser: NewUser): Call<NewUser>
 
+        @Headers("Content-Type: application/json")
+        @PATCH("users/{id}/")
+        fun updateUser(@Path("id") id: String, @Header("Authorization") token: String, @Body updateUser: UpdateUser): Call<UpdateUser>
+
+        @GET("users/current_user/")
+        fun getProfileInfo(@Header("Authorization") token: String): Call<UpdateUser>
+
+        @GET("dietList/")
+        fun getDietList(@Query("page")page: Int? = null, @Query("format")apiKey: String = "json" ): Call<DietList>
+
+        @Headers("Content-Type: application/json")
+        @POST("userDietaryRestriction/")
+        fun postUserDiets(@Header("Authorization") token: String, @Body order: UserDiets): Call<UserDiets>
 
 
 
 
-//
+
+        //
 //        # @api_view(['GET'])
 //        # def current_user(self):
 //        #     serializer = UserSerializer(self.request.user).data

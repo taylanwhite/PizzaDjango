@@ -32,7 +32,7 @@ class SauceOptions : AppCompatActivity() {
         setContentView(R.layout.activity_select_pizza)
         listView = findViewById(R.id.list_of_pizzas) as ListView?
         val currentLayout = findViewById(R.id.activity_select_pizza) as LinearLayout
-        currentLayout.setBackgroundColor(Color.parseColor("#D2B48C"))
+        currentLayout.setBackgroundResource(R.mipmap.dark_background)
         val mActionBar = supportActionBar
         mActionBar?.setDisplayShowHomeEnabled(false)
         mActionBar?.setDisplayShowTitleEnabled(false)
@@ -40,12 +40,13 @@ class SauceOptions : AppCompatActivity() {
         val mCustomView = mInflater.inflate(R.layout.activity_custom_title_bar, null)
         mActionBar?.customView = mCustomView
         mActionBar?.setDisplayShowCustomEnabled(true)
-        mActionBar?.setBackgroundDrawable(ColorDrawable(Color.parseColor("#C0C0C0")))
+        mActionBar?.setBackgroundDrawable(ColorDrawable(Color.parseColor("#212121")))
         val mTitle = mCustomView.findViewById(R.id.txtTitle) as TextView
         mTitle.text = " Choose a Sauce "
-        val mHome = mCustomView.findViewById(R.id.txtHome) as ImageButton
-        val txtNext = findViewById(R.id.txtNext) as ImageButton
+        val mHome = mCustomView.findViewById(R.id.txtHome) as ImageView
+        val txtNext = findViewById(R.id.txtNext) as ImageView
         txtNext.visibility = View.GONE
+        mTitle.setTextColor(Color.parseColor("#BDBDBD"))
 
         mHome.setOnClickListener {
             val intent = Intent(this, MainMenu::class.java)
@@ -56,6 +57,7 @@ class SauceOptions : AppCompatActivity() {
         var pizzaSelected = extras.getParcelableArrayList<SpecializedPizzaResults>("pizzaID")
         var crustSelected = extras.getParcelableArrayList<CrustTypeResults>("crustID")
         var sizeSelected = extras.getParcelableArrayList<SizeResults>("sizeID")
+        var dietRestrictions = extras.getParcelableArrayList<DietListResults>("dietID")
 
 
 
@@ -66,6 +68,7 @@ class SauceOptions : AppCompatActivity() {
             dialog.show()
             val txtPreToppings = dialog.findViewById(R.id.textView4) as? TextView
             val btnOkay = dialog.findViewById(R.id.btn_okay) as? Button
+            txtPreToppings?.setTextColor(Color.WHITE)
             btnOkay!!.text = "Sounds Good!"
             txtPreToppings!!.text = "The Sauce and Toppings for the " + pizzaSelected[0].name + " Pizza" + " have been pre-selected " +
                     "but you can add or change whatever you wish!"
@@ -74,8 +77,10 @@ class SauceOptions : AppCompatActivity() {
                 dialog.hide()
             }
         }
-            listView?.adapter = SauceListAdapter(this@SauceOptions, pizzaSelected, crustSelected, sizeSelected, sauceListDisplay)
+
+            listView?.adapter = SauceListAdapter(this@SauceOptions, pizzaSelected, crustSelected, sizeSelected, sauceListDisplay, dietRestrictions)
             getSauce()
+
 
 
 
@@ -88,7 +93,9 @@ class SauceOptions : AppCompatActivity() {
         var subStr = ""
         PizzaService.api.getSauce().enqueue(object: Callback<SauceType> {
             override fun onFailure(call: Call<SauceType>?, t: Throwable?) {
-                throw UnsupportedOperationException("not implemented") //To change body of created functions use File | Settings | File Templates.
+
+                val connectionError = "Could not connect to service. (Are you connected to the internet?)"
+                Toast.makeText(this@SauceOptions, connectionError, Toast.LENGTH_SHORT).show()
             }
 
             override fun onResponse(call: Call<SauceType>?, response: Response<SauceType>?) {

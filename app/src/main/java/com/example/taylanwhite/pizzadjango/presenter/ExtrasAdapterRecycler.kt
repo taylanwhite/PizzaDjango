@@ -7,16 +7,13 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import com.example.taylanwhite.pizzadjango.R
-import com.example.taylanwhite.pizzadjango.models.Extras
-import com.example.taylanwhite.pizzadjango.models.ExtrasResults
-import com.example.taylanwhite.pizzadjango.models.MeatToppingResults
-import com.example.taylanwhite.pizzadjango.models.SpecializedPizzaResults
+import com.example.taylanwhite.pizzadjango.models.*
 import java.util.*
 
 /**
  * Created by taylanwhite on 1/16/17.
  */
-class ExtrasAdapterRecycler(val idExtraList: ArrayList<ExtrasResults>, private val extraList: List<ExtrasResults>) : RecyclerView.Adapter<ExtrasAdapterRecycler.MyViewHolder>() {
+class ExtrasAdapterRecycler(val idExtraList: ArrayList<ExtrasResults>, private val extraList: List<ExtrasResults>, val crustDietaryRestrictions: ArrayList<DietListResults>) : RecyclerView.Adapter<ExtrasAdapterRecycler.MyViewHolder>() {
 
 
 
@@ -30,7 +27,7 @@ class ExtrasAdapterRecycler(val idExtraList: ArrayList<ExtrasResults>, private v
         }
 
         fun bind(topping: ExtrasResults) {
-
+            extrasName.setTextColor(Color.WHITE)
             try {
                 idExtraList[0].name?.forEach { item ->
                     if (topping.name == idExtraList[0].name) {
@@ -44,6 +41,30 @@ class ExtrasAdapterRecycler(val idExtraList: ArrayList<ExtrasResults>, private v
 
 
             } catch (e: IndexOutOfBoundsException) {
+            }
+
+
+            var v = 0
+            var t = 0
+            try {
+                for (z in 0..crustDietaryRestrictions.size - 1)
+                {
+
+                    crustDietaryRestrictions[t].extra.forEach {
+                        item ->
+                        if (topping.id == item) {
+
+                            extrasName.setTextColor(Color.RED)
+
+
+                        }
+                        v++
+                    }
+                    t++
+                }
+            }
+            catch (e:Exception) {
+                println("Error " + e.message)
             }
 
 
@@ -63,7 +84,7 @@ class ExtrasAdapterRecycler(val idExtraList: ArrayList<ExtrasResults>, private v
                 {
                     topping.selected = false
                     extrasName.text = topping.name
-                    extrasName.setTextColor(Color.BLACK)
+                    extrasName.setTextColor(Color.WHITE)
                     idExtraList.remove(topping)
 
                 }

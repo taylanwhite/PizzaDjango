@@ -33,7 +33,7 @@ class PastOrderRecycler(private val orderList: List<PastOrderResults>) : Recycle
 
         fun bind(orderDetails: PastOrderResults) {
             orderDetails.name
-            pizzaName.setTextColor(Color.BLACK)
+            pizzaName.setTextColor(Color.parseColor("#BDBDBD"))
             pizzaSize.setTextColor(Color.GRAY)
             pizzaPrice.setTextColor(Color.GRAY)
 

@@ -7,21 +7,23 @@ import android.graphics.drawable.ColorDrawable
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.preference.PreferenceManager
+import android.support.v4.app.FragmentActivity
 import android.support.v7.app.AlertDialog
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
-import android.widget.ImageButton
-import android.widget.RelativeLayout
-import android.widget.TextView
-import android.widget.Toast
+import android.widget.*
 import com.example.taylanwhite.pizzadjango.App
 import com.example.taylanwhite.pizzadjango.R
 import com.example.taylanwhite.pizzadjango.models.PastOrder
+import com.example.taylanwhite.pizzadjango.models.UpdateUser
 import com.example.taylanwhite.pizzadjango.presenter.PizzaService
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import android.widget.LinearLayout
+
+
 
 class MainMenu : AppCompatActivity() {
 
@@ -30,12 +32,32 @@ class MainMenu : AppCompatActivity() {
         setContentView(R.layout.activity_menu)
 
 
-        val btnOrderPizza = findViewById(R.id.btn_order_pizza) as ImageButton
-        val btnPastPizza = findViewById(R.id.btn_past_orders) as ImageButton
-        App.picasso.load(R.mipmap.pizza_order).into(btnOrderPizza)
-        App.picasso.load(R.mipmap.pizza_past).into(btnPastPizza)
+        val btnOrderPizza = findViewById(R.id.btn_order_pizza) as Button
+        val btnPastPizza = findViewById(R.id.btn_past_orders) as Button
+
+
+//        if(btnOrderPizza.isFocused) {
+//            btnOrderPizza.setTextColor(Color.BLACK)
+//        }
+//        else
+//        {
+//            btnOrderPizza.setTextColor(Color.WHITE)
+//        }
+//        if(btnPastPizza.isFocused) {
+//            btnPastPizza.setTextColor(Color.BLACK)
+//        }
+//        else
+//        {
+//            btnPastPizza.setTextColor(Color.WHITE)
+//        }
+//        btnOrderPizza.setOnClickListener {
+//
+//
+//            }
+//        }
+
         val currentLayout = findViewById(R.id.main_layout) as RelativeLayout
-        currentLayout.setBackgroundColor(Color.parseColor("#D2B48C"))
+        currentLayout.setBackgroundResource(R.mipmap.dark_background)
 
         val mActionBar = supportActionBar
         mActionBar?.setDisplayShowHomeEnabled(false)
@@ -44,15 +66,64 @@ class MainMenu : AppCompatActivity() {
         val mCustomView = mInflater.inflate(R.layout.activity_custom_log_out, null)
         mActionBar?.customView = mCustomView
         mActionBar?.setDisplayShowCustomEnabled(true)
-        mActionBar?.setBackgroundDrawable(ColorDrawable(Color.parseColor("#C0C0C0")))
+        mActionBar?.setBackgroundDrawable(ColorDrawable(Color.parseColor("#212121")))
+
 //        val mHome = findViewById(R.id.txtHome) as ImageButton
 //        mHome.visibility = View.GONE
-        val mTitle = findViewById(R.id.txtTitle) as TextView
-        val txtLogOut = findViewById(R.id.txtNext) as TextView
-        val txtProfile = findViewById(R.id.btn_profile) as ImageButton
+        val mTitle = findViewById(R.id.txt_title) as TextView
+        mTitle.setTextColor(Color.parseColor("#BDBDBD"))
+        val txtLogOut = findViewById(R.id.txt_log_out) as ImageView
+        val txtProfile = findViewById(R.id.txt_profile) as ImageView
+
+        txtLogOut.setBackgroundResource(R.mipmap.white_logout)
+        txtProfile.setBackgroundResource(R.mipmap.white_profile_icon)
         val default = "empty"
         val preferences = PreferenceManager.getDefaultSharedPreferences(this@MainMenu)
         val editor = preferences.edit()
+        var savedFirstName = ""
+
+
+
+        txtProfile.setOnClickListener {
+
+            val intent = Intent(this, ProfileActivity::class.java)
+            startActivity(intent)
+            finish()
+
+        }
+
+
+        var token: String = preferences.getString("token", "")
+        PizzaService.api.getProfileInfo("Token " + token).enqueue(object : Callback<UpdateUser> {
+            override fun onFailure(call: Call<UpdateUser>?, t: Throwable?) {
+                //To change body of created functions use File | Settings | File Templates.
+                val connectionError = "Could not connect to service. (Are you connected to the internet?)"
+                Toast.makeText(this@MainMenu, connectionError, Toast.LENGTH_SHORT).show()
+            }
+
+            override fun onResponse(call: Call<UpdateUser>?, response: Response<UpdateUser>?) {
+                if (response?.isSuccessful ?: false) {
+                    response?.body()?.let { response ->
+
+                        savedFirstName = response.first_name
+                        if(savedFirstName != "")
+                        {
+                            mTitle.text= "Welcome, $savedFirstName!"
+                        }
+                        else
+                        {
+                            mTitle.text="Welcome!"
+                        }
+                    }
+                } else {
+
+                    Toast.makeText(this@MainMenu, "ERROR MM(NAME REQUEST)", Toast.LENGTH_SHORT).show()
+
+                }
+            }
+
+        })
+
 
 
         txtLogOut.setOnClickListener {
@@ -86,8 +157,6 @@ class MainMenu : AppCompatActivity() {
         }
 
 //        Stetho.initializeWithDefaults(this@MainActivity)
-        App.picasso.load(R.mipmap.pizza_order).into(btnOrderPizza)
-        App.picasso.load(R.mipmap.pizza_past).into(btnPastPizza)
 
     }
 

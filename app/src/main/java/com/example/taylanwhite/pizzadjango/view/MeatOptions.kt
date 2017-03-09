@@ -38,7 +38,7 @@ class MeatOptions : AppCompatActivity() {
         setContentView(R.layout.activity_meat_options)
         val idMeatList = ArrayList<MeatToppingResults>()
         val currentLayout = findViewById(R.id.activity_meat_options) as RelativeLayout
-        currentLayout.setBackgroundColor(Color.parseColor("#D2B48C"))
+        currentLayout.setBackgroundResource(R.mipmap.dark_background)
         val mActionBar = supportActionBar
         mActionBar?.setDisplayShowHomeEnabled(false)
         mActionBar?.setDisplayShowTitleEnabled(false)
@@ -46,16 +46,19 @@ class MeatOptions : AppCompatActivity() {
         val mCustomView = mInflater.inflate(R.layout.activity_custom_title_bar, null)
         mActionBar?.customView = mCustomView
         mActionBar?.setDisplayShowCustomEnabled(true)
-        mActionBar?.setBackgroundDrawable(ColorDrawable(Color.parseColor("#C0C0C0")))
+        mActionBar?.setBackgroundDrawable(ColorDrawable(Color.parseColor("#212121")))
         val mTitle = mCustomView.findViewById(R.id.txtTitle) as TextView
         mTitle.text = " Choose the Meats "
-        val mHome = mCustomView.findViewById(R.id.txtHome) as ImageButton
-        val btnNext = findViewById(R.id.txtNext) as ImageButton
+        mTitle.setTextColor(Color.parseColor("#BDBDBD"))
+
+        val mHome = mCustomView.findViewById(R.id.txtHome) as ImageView
+        val btnNext = findViewById(R.id.txtNext) as ImageView
         val extras = intent.extras
         var pizzaSelected = extras.getParcelableArrayList<SpecializedPizzaResults>("pizzaID")
         var crustSelected = extras.getParcelableArrayList<CrustTypeResults>("crustID")
         var sizeSelected = extras.getParcelableArrayList<SizeResults>("sizeID")
         var sauceSelected = extras.getParcelableArrayList<SauceTypeResults>("sauceID")
+        var dietRestrictions = extras.getParcelableArrayList<DietListResults>("dietID")
         btnNext.setOnClickListener {
             val intent = Intent(this, VeggieOptions::class.java)
             intent.putExtra("pizzaID", pizzaSelected)
@@ -63,7 +66,9 @@ class MeatOptions : AppCompatActivity() {
             intent.putExtra("sizeID", sizeSelected)
             intent.putExtra("sauceID", sauceSelected)
             intent.putExtra("meatList", idMeatList)
+            intent.putExtra("dietID", dietRestrictions)
             startActivity(intent)
+            finish()
         }
         mHome.setOnClickListener {
             val intent = Intent(this, MainMenu::class.java)
@@ -72,7 +77,7 @@ class MeatOptions : AppCompatActivity() {
         }
 
 
-        mAdapter = MeatAdapterRecycler(idMeatList, pizzaSelected, pizzaList)
+        mAdapter = MeatAdapterRecycler(idMeatList, pizzaSelected, pizzaList, dietRestrictions)
         recyclerView = findViewById(R.id.recycler_view) as RecyclerView
         val mLayoutManager = LinearLayoutManager(applicationContext)
         recyclerView.layoutManager = mLayoutManager
@@ -90,7 +95,8 @@ class MeatOptions : AppCompatActivity() {
         var subStr = ""
         PizzaService.api.getMeatToppings(page).enqueue(object: Callback<MeatToppings> {
             override fun onFailure(call: Call<MeatToppings>?, t: Throwable?) {
-                throw UnsupportedOperationException("not implemented") //To change body of created functions use File | Settings | File Templates.
+                val connectionError = "Could not connect to service. (Are you connected to the internet?)"
+                Toast.makeText(this@MeatOptions, connectionError, Toast.LENGTH_SHORT).show()
             }
 
             override fun onResponse(call: Call<MeatToppings>?, response: Response<MeatToppings>?) {

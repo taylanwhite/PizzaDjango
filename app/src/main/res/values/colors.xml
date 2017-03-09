@@ -7,4 +7,8 @@
     <color name="tan">#D2B48C</color>
     <color name="black">#000000</color>
     <color name="silver">#C0C0C0</color>
+    <color name="transparent">#00000000</color>
+    <color name="grayMain">#BDBDBD</color>
+    <color name="black_overlay">#66000000</color>
+    <color name="darker_white">#F5F5F5</color>
 </resources>

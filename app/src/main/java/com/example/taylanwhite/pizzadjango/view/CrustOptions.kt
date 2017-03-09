@@ -1,21 +1,18 @@
 package com.example.taylanwhite.pizzadjango.view
 
+import android.app.Dialog
 import android.content.Intent
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.preference.PreferenceManager
 import android.view.LayoutInflater
 import android.view.View
-import android.widget.ImageButton
-import android.widget.LinearLayout
-import android.widget.ListView
-import android.widget.TextView
+import android.view.Window
+import android.widget.*
 import com.example.taylanwhite.pizzadjango.R
-import com.example.taylanwhite.pizzadjango.models.CrustType
-import com.example.taylanwhite.pizzadjango.models.CrustTypeResults
-import com.example.taylanwhite.pizzadjango.models.SpecializedPizzaResults
-import com.example.taylanwhite.pizzadjango.models.SpecializedPizzas
+import com.example.taylanwhite.pizzadjango.models.*
 import com.example.taylanwhite.pizzadjango.presenter.CrustListAdapter
 import com.example.taylanwhite.pizzadjango.presenter.PizzaListAdapter
 import com.example.taylanwhite.pizzadjango.presenter.PizzaService
@@ -23,11 +20,18 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import java.util.*
+import android.text.Spannable
+import android.text.SpannableString
+import android.text.style.ForegroundColorSpan
+
+
 
 class CrustOptions : AppCompatActivity() {
     val pizzaSelected: ArrayList<SpecializedPizzaResults> = arrayListOf()
     val crustListDisplay = ArrayList<CrustTypeResults>()
+    val completeChosenDiets = ArrayList<DietListResults>()
     var listView: ListView? = null
+
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -36,7 +40,7 @@ class CrustOptions : AppCompatActivity() {
         listView = findViewById(R.id.list_of_pizzas) as ListView?
 //        val crustList : CrustTypeResults
         val currentLayout = findViewById(R.id.activity_select_pizza) as LinearLayout
-        currentLayout.setBackgroundColor(Color.parseColor("#D2B48C"))
+        currentLayout.setBackgroundResource(R.mipmap.dark_background)
         val mActionBar = supportActionBar
         mActionBar?.setDisplayShowHomeEnabled(false)
         mActionBar?.setDisplayShowTitleEnabled(false)
@@ -44,11 +48,15 @@ class CrustOptions : AppCompatActivity() {
         val mCustomView = mInflater.inflate(R.layout.activity_custom_title_bar, null)
         mActionBar?.customView = mCustomView
         mActionBar?.setDisplayShowCustomEnabled(true)
-        mActionBar?.setBackgroundDrawable(ColorDrawable(Color.parseColor("#C0C0C0")))
+        mActionBar?.setBackgroundDrawable(ColorDrawable(Color.parseColor("#212121")))
         val mTitle = mCustomView.findViewById(R.id.txtTitle) as TextView
         mTitle.text = " Choose a Crust "
-        val mHome = mCustomView.findViewById(R.id.txtHome) as ImageButton
-        val txtNext = findViewById(R.id.txtNext) as ImageButton
+        mTitle.setTextColor(Color.parseColor("#BDBDBD"))
+        val mHome = mCustomView.findViewById(R.id.txtHome) as ImageView
+        val txtNext = findViewById(R.id.txtNext) as ImageView
+        var chosenDiets = DietListResults()
+
+
 
         txtNext.visibility = View.GONE
         mHome.setOnClickListener {
@@ -64,15 +72,87 @@ class CrustOptions : AppCompatActivity() {
             }
         }
 
-        listView?.adapter = CrustListAdapter(this@CrustOptions, pizzaSelected, crustListDisplay)
+
+
+        val preferences = PreferenceManager.getDefaultSharedPreferences(this)
+        val editor = preferences.edit()
+        val token: String = preferences.getString("token", "")
+        PizzaService.api.getChosenDiets("Token " + token).enqueue(object : Callback<GetUserDietsResults> {
+            override fun onFailure(call: Call<GetUserDietsResults>?, t: Throwable?) {
+                val connectionError = "Error(GCD)"
+                Toast.makeText(this@CrustOptions, connectionError, Toast.LENGTH_SHORT).show()
+            }
+
+            override fun onResponse(call: Call<GetUserDietsResults>?, response: Response<GetUserDietsResults>?) {
+                if (response?.isSuccessful ?: false) {
+                    response?.body()?.let { response ->
+                        var i = 0
+                        response.results[0].dietaryRestrictionsList.forEach {
+                            item ->
+                            chosenDiets = DietListResults()
+                            chosenDiets.name = item.name
+                            chosenDiets.selected = item.selected
+                            chosenDiets.id = item.id
+                            chosenDiets.crustType = item.crustType
+                            chosenDiets.meatToppings = item.meatToppings
+                            chosenDiets.veggieToppings = item.veggieToppings
+                            chosenDiets.sauceToppings = item.sauceToppings
+                            chosenDiets.extra = item.extra
+                            completeChosenDiets.add(i, chosenDiets)
+                            i++
+
+                        }
+                        val toppingBuilder = StringBuilder()
+                        completeChosenDiets.forEachIndexed { i, it ->
+
+                            if(completeChosenDiets.size == 1) {
+                                toppingBuilder.append(completeChosenDiets[0].name)
+                            }
+                            else{
+                                if (i == completeChosenDiets.lastIndex) {
+                                    toppingBuilder.append("and ")
+                                    toppingBuilder.append(completeChosenDiets[i].name)
+                                } else toppingBuilder.append(completeChosenDiets[i].name)
+
+                                if (i != completeChosenDiets.lastIndex) {
+                                    toppingBuilder.append(", ")
+                                }
+                            }
+
+
+                        }
+                        if(completeChosenDiets.isNotEmpty()) {
+                            val dialog = Dialog(this@CrustOptions)
+                            dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
+                            dialog.setContentView(R.layout.custom_dialog_layout)
+                            dialog.show()
+                            val txtPreToppings = dialog.findViewById(R.id.textView4) as? TextView
+                            txtPreToppings?.setTextColor(Color.WHITE)
+                            val WordtoSpan = SpannableString("Toppings and Sauces to avoid have been highlighted in RED for $toppingBuilder diets but you can still select any of these.")
+                            WordtoSpan.setSpan(ForegroundColorSpan(Color.RED), 54, 57,
+                                    Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+                            txtPreToppings?.text = WordtoSpan
+                            val btnOkay = dialog.findViewById(R.id.btn_okay) as? Button
+                            btnOkay!!.text = "Awesome!"
+//                            txtPreToppings?.text = "Toppings and Sauces have been highlighted in RED $toppingBuilder but you can still select any of these."
+
+
+                            btnOkay.setOnClickListener {
+                                dialog.dismiss()
+                            }
+                        }
+                    }
+                }
+            }
+        })
+
+
+        listView?.adapter = CrustListAdapter(this@CrustOptions, pizzaSelected, crustListDisplay, completeChosenDiets)
+
 
 
         //api call
         getCrusts()
-
-
-
-
 
     }
 
@@ -81,7 +161,10 @@ class CrustOptions : AppCompatActivity() {
         var subStr = ""
         PizzaService.api.getCrusts(page).enqueue(object : Callback<CrustType> {
             override fun onFailure(call: Call<CrustType>?, t: Throwable?) {
-                throw UnsupportedOperationException("not implemented") //To change body of created functions use File | Settings | File Templates.
+
+                val connectionError = "Could not connect to service. (Are you connected to the internet?)"
+                Toast.makeText(this@CrustOptions, connectionError, Toast.LENGTH_SHORT).show()
+
             }
 
             override fun onResponse(call: Call<CrustType>?, response: Response<CrustType>?) {
@@ -91,6 +174,7 @@ class CrustOptions : AppCompatActivity() {
 
                         if(response.next != null) {
                             subStr = response.next.substring(response.next.length - 1)
+
                         }
 
 
@@ -100,22 +184,17 @@ class CrustOptions : AppCompatActivity() {
 //                           page = response.next
                        }
 
-
                         response.results!!.forEach { i ->
                             crustListDisplay.add(i)
                             (listView?.adapter as CrustListAdapter?)?.notifyDataSetChanged()
                         }
 //                        crustList
-
-
                     }
                 }
-
-
             }
-
         })
     }
+
 
 
 

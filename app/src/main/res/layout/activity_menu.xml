@@ -11,7 +11,7 @@
     tools:context="com.example.taylanwhite.pizzadjango.view.MainActivity">
 
 
-    <ImageButton
+    <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/btn_order_pizza"
@@ -19,18 +19,40 @@
         android:layout_alignParentStart="true"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
-        android:scaleType="fitCenter"
         android:adjustViewBounds="true"
-        style="?android:attr/borderlessButtonStyle"/>
+        android:text="MAKE AN ORDER"
+        android:background="@drawable/button_order"
+        android:textColor="@drawable/button_text_color"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:scaleType="centerCrop"
+        android:padding="25dp"
+        android:layout_marginTop="55dp"
+        />
 
-    <ImageButton
+    <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/btn_past_orders"
-        android:layout_marginTop="50dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
         android:layout_below="@+id/btn_order_pizza"
-        android:scaleType="fitCenter"
+        android:layout_marginTop="35dp"
+        android:text="PAST ORDERS"
         android:adjustViewBounds="true"
-        style="?android:attr/borderlessButtonStyle"/>
+        android:background="@drawable/button_order"
+        android:textColor="@drawable/button_text_color"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:scaleType="centerCrop"
+        android:padding="25dp"/>
+
+    <!--<Button-->
+        <!--android:text="Button"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_below="@+id/btn_past_orders"-->
+        <!--android:layout_centerHorizontal="true"-->
+        <!--android:layout_marginTop="44dp"-->
+        <!--android:id="@+id/btn_test"-->
+        <!--android:background="@drawable/button_login"/>-->
 
 </RelativeLayout>

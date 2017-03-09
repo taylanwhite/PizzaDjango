@@ -15,10 +15,7 @@ import android.support.v7.widget.RecyclerView
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
-import android.widget.ImageButton
-import android.widget.RelativeLayout
-import android.widget.TextView
-import android.widget.Toast
+import android.widget.*
 import com.example.taylanwhite.pizzadjango.R
 import com.example.taylanwhite.pizzadjango.models.*
 import com.example.taylanwhite.pizzadjango.presenter.PastOrderRecycler
@@ -47,7 +44,7 @@ class PastOrders : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_meat_options)
         val currentLayout = findViewById(R.id.activity_meat_options) as RelativeLayout
-        currentLayout.setBackgroundColor(Color.parseColor("#D2B48C"))
+        currentLayout.setBackgroundResource(R.mipmap.dark_background)
         val mActionBar = supportActionBar
         mActionBar?.setDisplayShowHomeEnabled(false)
         mActionBar?.setDisplayShowTitleEnabled(false)
@@ -55,18 +52,17 @@ class PastOrders : AppCompatActivity() {
         val mCustomView = mInflater.inflate(R.layout.activity_custom_title_bar, null)
         mActionBar?.customView = mCustomView
         mActionBar?.setDisplayShowCustomEnabled(true)
-        mActionBar?.setBackgroundDrawable(ColorDrawable(Color.parseColor("#C0C0C0")))
+        mActionBar?.setBackgroundDrawable(ColorDrawable(Color.parseColor("#212121")))
         val mTitle = mCustomView.findViewById(R.id.txtTitle) as TextView
         mTitle.text = " Past Orders "
-//        if (mAdapter.itemCount == 0) {
-//            mTitle.text = " No Past Orders "
-//        }
+        mTitle.setTextColor(Color.parseColor("#BDBDBD"))
+
 
         Handler = Handler()
 
 
-        val mHome = mCustomView.findViewById(R.id.txtHome) as ImageButton
-        val txtNext = findViewById(R.id.txtNext) as ImageButton
+        val mHome = mCustomView.findViewById(R.id.txtHome) as ImageView
+        val txtNext = findViewById(R.id.txtNext) as ImageView
         txtNext.visibility = View.GONE
 
 
@@ -114,9 +110,7 @@ class PastOrders : AppCompatActivity() {
 
                                             }
                                         }
-//                                        val intent = Intent(this@PastOrders, PastOrders::class.java)
-//                                        startActivity(intent)
-//                                        finish()
+//
                                         orderList.removeAt(position)
                                         mAdapter.notifyItemRemoved(position)
                                     }
@@ -145,6 +139,7 @@ class PastOrders : AppCompatActivity() {
                         intent.putExtra("extras", orderList[position].extra)
                         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                         startActivity(intent)
+                        finish()
 
                     }
 
@@ -163,9 +158,10 @@ class PastOrders : AppCompatActivity() {
         token.let { it1 ->
             PizzaService.api.getOrders("Token " + it1, page).enqueue(object : Callback<PastOrder> {
                 override fun onFailure(call: Call<PastOrder>?, t: Throwable?) {
-                    val connectionError = "Could not retrieve Past Orders"
+                    val connectionError = "Could not retrieve Past Orders, Are you connected to the internet?"
                     Toast.makeText(this@PastOrders, connectionError, Toast.LENGTH_SHORT).show()
                     Log.d("onFailure", connectionError, t)
+                    finish()
                 }
 
                 override fun onResponse(call: Call<PastOrder>?, response: Response<PastOrder>?) {

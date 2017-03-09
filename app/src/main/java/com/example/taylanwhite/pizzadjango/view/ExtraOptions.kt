@@ -9,9 +9,7 @@ import android.support.v7.widget.DefaultItemAnimator
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
-import android.widget.ImageButton
-import android.widget.RelativeLayout
-import android.widget.TextView
+import android.widget.*
 import com.example.taylanwhite.pizzadjango.R
 import com.example.taylanwhite.pizzadjango.models.*
 import com.example.taylanwhite.pizzadjango.presenter.ExtrasAdapterRecycler
@@ -34,7 +32,7 @@ class ExtraOptions : AppCompatActivity() {
         setContentView(R.layout.activity_extra_options)
         val idExtraList = ArrayList<ExtrasResults>()
         val currentLayout = findViewById(R.id.activity_extra_options) as RelativeLayout
-        currentLayout.setBackgroundColor(Color.parseColor("#D2B48C"))
+        currentLayout.setBackgroundResource(R.mipmap.dark_background)
         val mActionBar = supportActionBar
         mActionBar?.setDisplayShowHomeEnabled(false)
         mActionBar?.setDisplayShowTitleEnabled(false)
@@ -42,11 +40,12 @@ class ExtraOptions : AppCompatActivity() {
         val mCustomView = mInflater.inflate(R.layout.activity_custom_title_bar, null)
         mActionBar?.customView = mCustomView
         mActionBar?.setDisplayShowCustomEnabled(true)
-        mActionBar?.setBackgroundDrawable(ColorDrawable(Color.parseColor("#C0C0C0")))
+        mActionBar?.setBackgroundDrawable(ColorDrawable(Color.parseColor("#212121")))
         val mTitle = mCustomView.findViewById(R.id.txtTitle) as TextView
         mTitle.text = " Extras! "
-        val mHome = mCustomView.findViewById(R.id.txtHome) as ImageButton
-        val btnNext = findViewById(R.id.txtNext) as ImageButton
+        mTitle.setTextColor(Color.parseColor("#BDBDBD"))
+        val mHome = mCustomView.findViewById(R.id.txtHome) as ImageView
+        val btnNext = findViewById(R.id.txtNext) as ImageView
         mHome.setOnClickListener {
             val intent = Intent(this, MainMenu::class.java)
             startActivity(intent)
@@ -61,6 +60,7 @@ class ExtraOptions : AppCompatActivity() {
         var sauceSelected = extras.getParcelableArrayList<SauceTypeResults>("sauceID")
         var veggieSelected = extras.getParcelableArrayList<VeggieToppingResults>("veggieList")
         var meatList = extras.getParcelableArrayList<MeatToppingResults>("meatList")
+        var dietRestrictions = extras.getParcelableArrayList<DietListResults>("dietID")
         var toppingList = ArrayList<String>()
 
         btnNext.setOnClickListener {
@@ -73,9 +73,10 @@ class ExtraOptions : AppCompatActivity() {
             intent.putExtra("veggieList", veggieSelected)
             intent.putExtra("extrasList", idExtraList)
             startActivity(intent)
+            finish()
         }
 
-        mAdapter = ExtrasAdapterRecycler(idExtraList, pizzaList)
+        mAdapter = ExtrasAdapterRecycler(idExtraList, pizzaList, dietRestrictions)
         recyclerView = findViewById(R.id.recycler_view) as RecyclerView
         val mLayoutManager = LinearLayoutManager(applicationContext)
         recyclerView.layoutManager = mLayoutManager
@@ -95,7 +96,8 @@ class ExtraOptions : AppCompatActivity() {
         var subStr = ""
         PizzaService.api.getExtras(page).enqueue(object: Callback<Extras> {
             override fun onFailure(call: Call<Extras>?, t: Throwable?) {
-                throw UnsupportedOperationException("not implemented") //To change body of created functions use File | Settings | File Templates.
+                val connectionError = "Could not connect to service. (Are you connected to the internet?)"
+                Toast.makeText(this@ExtraOptions, connectionError, Toast.LENGTH_SHORT).show()
             }
 
             override fun onResponse(call: Call<Extras>?, response: Response<Extras>?) {

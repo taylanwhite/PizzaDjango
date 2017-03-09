@@ -37,41 +37,44 @@
         android:inputType="textEmailAddress"
         android:ems="10"
         android:id="@+id/txt_Email"
-        android:hint="  Email"
+        android:hint="Email"
         android:background="@drawable/button_login"
-        android:textColor="#8BB5E6"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:layout_above="@+id/imageTextIcon"
         android:layout_alignLeft="@+id/txt_Username_Login"
-        android:layout_alignStart="@+id/txt_Username_Login" />
+        android:layout_alignStart="@+id/txt_Username_Login"
+        android:padding="2dp"
+        android:textCursorDrawable="@drawable/color_cursor"/>
 
     <EditText
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:inputType="textEmailAddress"
         android:ems="10"
+        android:padding="2dp"
         android:id="@+id/txt_Username_Login"
-        android:hint="  Username"
+        android:hint="Username"
         android:background="@drawable/button_login"
-        android:textColor="#8BB5E6"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:layout_centerVertical="true"
         android:layout_alignLeft="@+id/txt_Pass_Login"
-        android:layout_alignStart="@+id/txt_Pass_Login" />
+        android:layout_alignStart="@+id/txt_Pass_Login"
+        android:textCursorDrawable="@drawable/color_cursor"/>
 
     <EditText
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:inputType="textPassword"
         android:ems="10"
+        android:padding="2dp"
         android:id="@+id/txt_Pass_Login"
-        android:layout_marginTop="13dp"
-        android:hint=" Password"
+        android:layout_marginTop="10dp"
+        android:hint="Password"
         android:background="@drawable/button_login"
-        android:textColor="#8BB5E6"
         android:textAppearance="?android:attr/textAppearanceLarge"
-        android:layout_below="@+id/imageTextIcon"
-        android:layout_centerHorizontal="true" />
+        android:layout_below="@+id/txt_Username_Login"
+        android:layout_centerHorizontal="true"
+        android:textCursorDrawable="@drawable/color_cursor"/>
 
     <Button
         android:layout_width="wrap_content"

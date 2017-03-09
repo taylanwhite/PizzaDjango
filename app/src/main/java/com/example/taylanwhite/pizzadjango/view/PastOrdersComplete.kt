@@ -24,8 +24,8 @@ class PastOrdersComplete : AppCompatActivity() {
         val idVeggieList = ArrayList<Int>()
         val currentLayout = findViewById(R.id.activity_complete_pizza) as RelativeLayout
         val scrollLayout = findViewById(R.id.activity_scroll_view) as ScrollView
-        scrollLayout.setBackgroundColor(Color.parseColor("#D2B48C"))
-        currentLayout.setBackgroundColor(Color.parseColor("#D2B48C"))
+        scrollLayout.setBackgroundResource(R.mipmap.dark_background)
+        currentLayout.setBackgroundResource(R.mipmap.dark_background)
         val mActionBar = supportActionBar
         mActionBar?.setDisplayShowHomeEnabled(false)
         mActionBar?.setDisplayShowTitleEnabled(false)
@@ -33,22 +33,20 @@ class PastOrdersComplete : AppCompatActivity() {
         val mCustomView = mInflater.inflate(R.layout.activity_custom_title_bar, null)
         mActionBar?.customView = mCustomView
         mActionBar?.setDisplayShowCustomEnabled(true)
-        mActionBar?.setBackgroundDrawable(ColorDrawable(Color.parseColor("#C0C0C0")))
+        mActionBar?.setBackgroundDrawable(ColorDrawable(Color.parseColor("#212121")))
         val mTitle = mCustomView.findViewById(R.id.txtTitle) as TextView
         mTitle.text = " Order Info "
+        mTitle.setTextColor(Color.parseColor("#BDBDBD"))
+
         val image_Toppings = findViewById(R.id.image_customers) as ImageView
         App.picasso.load(R.mipmap.pizza3).into(image_Toppings)
-        val mHome = mCustomView.findViewById(R.id.txtHome) as ImageButton
-        val mBack = mCustomView.findViewById(R.id.txtNext) as ImageButton
-        val btnNext = findViewById(R.id.txtNext) as ImageButton
-        val txtDetails = findViewById(R.id.txt_order_details) as TextView
+        val mHome = mCustomView.findViewById(R.id.txtHome) as ImageView
+        val mBack = mCustomView.findViewById(R.id.txtNext) as ImageView
         val txtName = findViewById(R.id.txt_chosen_pizza) as TextView
-        val txtExtras = findViewById(R.id.txt_extras) as TextView
         val txtPrice = findViewById(R.id.txt_price) as TextView
         val txtSize = findViewById(R.id.txt_size) as TextView
         val txtSauce = findViewById(R.id.txt_sauce) as TextView
         val txtCrust = findViewById(R.id.txt_crust) as TextView
-        val txtToppings = findViewById(R.id.txt_toppings) as TextView
 
         mHome.setOnClickListener {
             val intent = Intent(this, MainMenu::class.java)
@@ -112,17 +110,16 @@ class PastOrdersComplete : AppCompatActivity() {
         }
 
 
-        if (meatToppings != null && veggieToppings != null) {
-            txtToppings.text = "Toppings: " + toppingBuilder.toString()
+        if (!(toppingBuilder.isEmpty())) {
+            txt_toppings.text = "Toppings: " + toppingBuilder.toString()
         } else {
-            txtToppings.text = "Toppings: None"
+            txt_toppings.text = "Toppings: None"
         }
-        if (extrasList != null) {
-            txtExtras.text = "Extras: " + extraBuilder.toString()
+        if (!(extraBuilder.isEmpty())) {
+            txt_extras.text = "Extras: " + extraBuilder.toString()
         } else {
-            txtExtras.text = "Extras: None"
+            txt_extras.text = "Extras: None"
         }
-
 
         txtName.text = name
         txtPrice.text = "$$price"

@@ -30,19 +30,19 @@ class SelectPizza : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_select_pizza)
         val currentLayout = findViewById(R.id.activity_select_pizza) as LinearLayout
-        currentLayout.setBackgroundColor(Color.parseColor("#D2B48C"))
         val mActionBar = supportActionBar
-        mActionBar?.setDisplayShowHomeEnabled(false)
+        currentLayout.setBackgroundResource(R.mipmap.dark_background)
         mActionBar?.setDisplayShowTitleEnabled(false)
         val mInflater = LayoutInflater.from(this)
         val mCustomView = mInflater.inflate(R.layout.activity_custom_title_bar, null)
         mActionBar?.customView = mCustomView
         mActionBar?.setDisplayShowCustomEnabled(true)
-        mActionBar?.setBackgroundDrawable(ColorDrawable(Color.parseColor("#C0C0C0")))
+        mActionBar?.setBackgroundDrawable(ColorDrawable(Color.parseColor("#212121")))
         val mTitle = mCustomView.findViewById(R.id.txtTitle) as TextView
         mTitle.text = " Pick a Pizza "
-        val mHome = mCustomView.findViewById(R.id.txtHome) as ImageButton
-        val txtNext = findViewById(R.id.txtNext) as ImageButton
+        mTitle.setTextColor(Color.parseColor("#BDBDBD"))
+        val mHome = mCustomView.findViewById(R.id.txtHome) as ImageView
+        val txtNext = findViewById(R.id.txtNext) as ImageView
         txtNext.visibility = View.GONE
         mHome.setOnClickListener {
             val intent = Intent(this, MainMenu::class.java)
@@ -51,10 +51,11 @@ class SelectPizza : AppCompatActivity() {
         }
 
 
-
         PizzaService.api.getSpecialtyPizzas().enqueue(object : Callback<SpecializedPizzas> {
             override fun onFailure(call: Call<SpecializedPizzas>?, t: Throwable?) {
-                throw UnsupportedOperationException("not implemented") //To change body of created functions use File | Settings | File Templates.
+                val connectionError = "Could not connect to service. (Are you connected to the internet?)"
+                Toast.makeText(this@SelectPizza, connectionError, Toast.LENGTH_SHORT).show()
+                finish()
             }
 
             override fun onResponse(call: Call<SpecializedPizzas>?, response: Response<SpecializedPizzas>?) {
