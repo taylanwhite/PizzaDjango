@@ -30,6 +30,7 @@ class SauceOptions : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_select_pizza)
+
         listView = findViewById(R.id.list_of_pizzas) as ListView?
         val currentLayout = findViewById(R.id.activity_select_pizza) as LinearLayout
         currentLayout.setBackgroundResource(R.mipmap.dark_background)

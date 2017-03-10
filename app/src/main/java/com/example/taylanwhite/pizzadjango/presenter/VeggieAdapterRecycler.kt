@@ -28,7 +28,6 @@ class VeggieAdapterRecycler(val idVeggieList: ArrayList<VeggieToppingResults>, v
         }
 
         fun bind(topping: VeggieToppingResults) {
-            VeggieName.setTextColor(Color.WHITE)
             try {
                 for (item in pizza_ID[0].veggieToppings) {
 
@@ -37,6 +36,10 @@ class VeggieAdapterRecycler(val idVeggieList: ArrayList<VeggieToppingResults>, v
                         VeggieName.text = topping.name
                         topping.selected = true
                         idVeggieList.add(topping)
+                    }
+                    else
+                    {
+                        VeggieName.setTextColor(Color.WHITE)
                     }
                     i++
                 }

@@ -27,7 +27,7 @@ class MeatAdapterRecycler(val idMeatList: ArrayList<MeatToppingResults>, val piz
         }
 
         fun bind(topping: MeatToppingResults) {
-            meatName.setTextColor(Color.WHITE)
+//            meatName.setTextColor(Color.WHITE)
             try {
                 for (item in pizza_ID[0].meatToppings) {
 
@@ -36,6 +36,10 @@ class MeatAdapterRecycler(val idMeatList: ArrayList<MeatToppingResults>, val piz
                         meatName.text = topping.name
                         topping.selected = true
                         idMeatList.add(topping)
+                    }
+                    else
+                    {
+                        meatName.setTextColor(Color.WHITE)
                     }
 
                     i++
